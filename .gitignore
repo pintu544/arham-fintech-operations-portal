@@ -9,3 +9,5 @@ coverage/
 *.log
 *.docx
 .DS_Store
+.railway/
+.vercel/

@@ -47,7 +47,8 @@ export function SocketProvider({ children }) {
 
   useEffect(() => {
     loadSyncStatus()
-    const socket = io({ transports: ['websocket', 'polling'] })
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || undefined
+    const socket = io(socketUrl, { transports: ['websocket', 'polling'] })
     socketRef.current = socket
 
     socket.on('connect', loadSyncStatus)

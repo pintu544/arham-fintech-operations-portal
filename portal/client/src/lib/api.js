@@ -8,6 +8,13 @@ export class ApiError extends Error {
   }
 }
 
+const apiBaseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+
+export function apiUrl(path) {
+  if (!apiBaseUrl || /^https?:\/\//i.test(path)) return path
+  return `${apiBaseUrl}${path.startsWith('/') ? path : `/${path}`}`
+}
+
 export async function apiRequest(path, {
   employeeId,
   signal,
@@ -21,7 +28,7 @@ export async function apiRequest(path, {
 
   let response
   try {
-    response = await fetch(path, {
+    response = await fetch(apiUrl(path), {
       method,
       signal,
       headers: requestHeaders,

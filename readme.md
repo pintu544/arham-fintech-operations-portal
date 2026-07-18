@@ -126,6 +126,8 @@ Socket.IO emits `sync-status` during a pull and `data-updated` only after a succ
 | `INCENTIVE_RATE` | `0.10` | Share of mapped-client brokerage paid as incentive |
 | `DATABASE_PATH` | `portal/server/portal.db` | SQLite cache path; relative paths use the server working directory |
 | `CORS_ORIGIN` | `*` | Allowed browser origin for local/demo deployment |
+| `VITE_API_URL` | same origin | Public portal API URL embedded in the frontend build |
+| `VITE_SOCKET_URL` | `VITE_API_URL` | Public Socket.IO server URL embedded in the frontend build |
 
 There are 4 client pages and 50 trade pages with the seeded data. Setting `BSE_PAGE_DELAY_MS=11000` produces approximately `54 × 11 seconds = 594 seconds`, or 9.9 minutes, before retry backoff. Each individual page still finishes below the 25-second portal timeout.
 
@@ -154,21 +156,22 @@ The verification suite covers filters and validation, deterministic failures, ti
 
 ## Submission links
 
-Fill these after publishing and recording:
+The services below are deployed; the video walkthrough remains a manual submission step.
 
 | Deliverable | URL |
 | --- | --- |
-| Git repository | `TODO: repository URL` |
-| Mock BSE API | `TODO: public /api/health URL` |
-| Internal dashboard | `TODO: public dashboard URL` |
+| Git repository | <https://github.com/pintu544/arham-fintech-operations-portal> |
+| Mock BSE API | <https://mock-bse-api-production.up.railway.app/api/health> |
+| Portal API | <https://portal-api-production-0ba6.up.railway.app/api/health> |
+| Internal dashboard | <https://arham-fintech-operations-portal.vercel.app> |
 | Video walkthrough | `TODO: video URL` |
 
 Final submission checklist:
 
-- [ ] `npm run verify` passes from a clean install
+- [x] `npm run verify` passes from a clean install
 - [ ] `docker compose up --build` makes both health checks pass
-- [ ] Public deployment uses a persistent portal database volume
-- [ ] Public API and dashboard URLs are inserted above
+- [x] Public deployment uses a persistent portal database volume
+- [x] Public API and dashboard URLs are inserted above
 - [ ] Video demonstrates slow/failing BSE, cached screens, role scoping, and live refresh
 - [ ] Repository excludes `.env`, SQLite, WAL/SHM, logs, `node_modules`, and build output
 
