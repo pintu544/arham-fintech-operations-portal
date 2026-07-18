@@ -1,0 +1,7 @@
+**/node_modules
+client/dist
+client/src/**/*.test.*
+server/test
+server/*.db
+server/*.db-*
+npm-debug.log

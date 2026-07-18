@@ -1,0 +1,19 @@
+{
+  "name": "mock-bse-api",
+  "version": "1.0.0",
+  "description": "Mock BSE Exchange API Simulator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.1"
+  }
+}

@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: |
+            mock-bse-api/package-lock.json
+            portal/server/package-lock.json
+            portal/client/package-lock.json
+      - run: npm ci --prefix mock-bse-api
+      - run: npm ci --prefix portal/server
+      - run: npm ci --prefix portal/client
+      - run: npm run verify
