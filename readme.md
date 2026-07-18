@@ -156,15 +156,13 @@ The verification suite covers filters and validation, deterministic failures, ti
 
 ## Submission links
 
-The services below are deployed; the video walkthrough remains a manual submission step.
-
 | Deliverable | URL |
 | --- | --- |
 | Git repository | <https://github.com/pintu544/arham-fintech-operations-portal> |
 | Mock BSE API | <https://mock-bse-api-production.up.railway.app/api/health> |
 | Portal API | <https://portal-api-production-0ba6.up.railway.app/api/health> |
 | Internal dashboard | <https://arham-fintech-operations-portal.vercel.app> |
-| Video walkthrough | `TODO: video URL` |
+| Video walkthrough | <https://www.loom.com/share/a060541bba25473297c18831c592a50b> |
 
 Final submission checklist:
 
