@@ -1,17 +1,11 @@
 import { useSocket } from '../contexts/SocketContext'
 import { useAuth } from '../contexts/AuthContext'
 import { Menu, RefreshCw } from 'lucide-react'
+import IdentitySelector from './IdentitySelector'
 
 export default function Header({ onMenuToggle }) {
   const { syncStatus, triggerSync } = useSocket()
-  const { employees, currentUser, login, logout, isManagement, directoryError } = useAuth()
-
-  const handleRoleChange = event => {
-    const employeeId = event.target.value
-    if (!employeeId) return logout()
-    const employee = employees.find(item => item.employeeId === employeeId)
-    if (employee) login(employee)
-  }
+  const { currentUser, isManagement } = useAuth()
 
   const getInitials = () => {
     if (!currentUser) return '?'
@@ -30,9 +24,10 @@ export default function Header({ onMenuToggle }) {
     return syncStatus.lastSuccessfulSync ? 'Synced' : 'Never synced'
   }
 
-  const management = employees.filter(employee => employee.role === 'management')
-  const relationshipManagers = employees.filter(employee => employee.role === 'relationship_manager')
   const lastSuccess = syncStatus.lastSuccessfulSync?.completedAt
+  const lastUpdated = lastSuccess
+    ? new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(lastSuccess))
+    : null
 
   return (
     <header className="header">
@@ -40,41 +35,29 @@ export default function Header({ onMenuToggle }) {
         <button className="menu-toggle" onClick={onMenuToggle} aria-label="Toggle navigation">
           <Menu size={22} strokeWidth={1.5} />
         </button>
-        <div className="sync-indicator" title={lastSuccess ? `Last successful sync: ${new Date(lastSuccess).toLocaleString('en-IN')}` : syncStatus.message}>
+        <div className="sync-indicator" aria-live="polite" title={lastUpdated ? `Last successful sync: ${lastUpdated}` : syncStatus.message}>
           <span className={`sync-dot ${syncStatus.status}`} />
-          <span>{getSyncLabel()}</span>
+          <span className="sync-label">{getSyncLabel()}</span>
         </div>
+        {lastUpdated && <time className="header-last-updated" dateTime={lastSuccess}>Updated {lastUpdated}</time>}
         {isManagement && (
           <button
             className="btn btn-ghost btn-sm"
             onClick={() => triggerSync(currentUser.employeeId).catch(() => {})}
             disabled={syncStatus.status === 'syncing'}
+            aria-label="Synchronize portal data"
+            title="Synchronize portal data"
           >
             <span className={`btn-icon ${syncStatus.status === 'syncing' ? 'spinning' : ''}`}>
               <RefreshCw size={14} strokeWidth={2} />
             </span>
-            Sync
+            <span className="sync-button-label">Sync</span>
           </button>
         )}
       </div>
       <div className="header-right">
         <div className="header-divider" />
-        <div className="role-selector" title={directoryError || 'Assessment-only demo identity'}>
-          <span className="role-label">View as</span>
-          <select value={currentUser?.employeeId || ''} onChange={handleRoleChange} aria-label="Select demo identity">
-            <option value="">Select employee…</option>
-            {management.length > 0 && (
-              <optgroup label="Management">
-                {management.map(employee => <option key={employee.employeeId} value={employee.employeeId}>{employee.name} ({employee.employeeId})</option>)}
-              </optgroup>
-            )}
-            {relationshipManagers.length > 0 && (
-              <optgroup label="Relationship Managers">
-                {relationshipManagers.map(employee => <option key={employee.employeeId} value={employee.employeeId}>{employee.name} ({employee.employeeId})</option>)}
-              </optgroup>
-            )}
-          </select>
-        </div>
+        <IdentitySelector id="header-demo-identity" className="header-identity-selector" />
         <div className="user-avatar" title={currentUser?.name || 'No employee selected'}>{getInitials()}</div>
       </div>
     </header>

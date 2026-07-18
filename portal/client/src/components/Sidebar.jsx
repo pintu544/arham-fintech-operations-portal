@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { LayoutDashboard, Users, BarChart3, ClipboardList, Building2, Banknote } from 'lucide-react'
+import IdentitySelector from './IdentitySelector'
 
 export default function Sidebar({ open, onClose }) {
   const { currentUser } = useAuth()
@@ -11,6 +12,9 @@ export default function Sidebar({ open, onClose }) {
       <div className="sidebar-brand">
         <h1>Operations Portal</h1>
         <span>Arham Fintech</span>
+      </div>
+      <div className="sidebar-identity">
+        <IdentitySelector id="sidebar-demo-identity" label="Demo identity" />
       </div>
       <nav className="sidebar-nav" onClick={onClose}>
         <NavLink to="/overview" className={({ isActive }) => isActive ? 'active' : ''}>

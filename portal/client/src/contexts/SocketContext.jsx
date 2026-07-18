@@ -17,9 +17,9 @@ export function SocketProvider({ children }) {
   const socketRef = useRef(null)
   const lastSnapshotRef = useRef(null)
 
-  const addToast = useCallback((message) => {
+  const addToast = useCallback((message, type = 'success') => {
     const id = `${Date.now()}-${Math.random()}`
-    setToasts(previous => [...previous, { id, message }])
+    setToasts(previous => [...previous, { id, message, type }])
     setTimeout(() => setToasts(previous => previous.filter(toast => toast.id !== id)), 3500)
   }, [])
 
@@ -81,9 +81,9 @@ export function SocketProvider({ children }) {
       return result
     } catch (error) {
       if (error instanceof ApiError && error.code === 'SYNC_IN_PROGRESS') {
-        addToast('A synchronization is already running')
+        addToast('A synchronization is already running', 'warning')
       } else {
-        addToast(error.message || 'Failed to start synchronization')
+        addToast(error.message || 'Failed to start synchronization', 'error')
       }
       throw error
     }

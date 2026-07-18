@@ -11,6 +11,13 @@ function formatINR(value) {
   return '₹' + Number(value).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
+function formatCompactINR(value) {
+  const amount = Number(value || 0)
+  if (amount >= 10000000) return `₹${(amount / 10000000).toFixed(2)}Cr`
+  if (amount >= 100000) return `₹${(amount / 100000).toFixed(2)}L`
+  return formatINR(amount)
+}
+
 function formatDate(dateValue) {
   if (!dateValue) return ''
   return new Intl.DateTimeFormat('en-IN', {
@@ -122,12 +129,12 @@ export default function Trades() {
         <div className="stat-card amber">
           <TrendingUp className="stat-icon" size={28} style={{ opacity: 0.12 }} />
           <div className="stat-label">Total Volume</div>
-          <div className="stat-value">{formatINR(stats.totalVolume)}</div>
+          <div className="stat-value">{formatCompactINR(stats.totalVolume)}</div>
         </div>
         <div className="stat-card emerald">
           <DollarSign className="stat-icon" size={28} style={{ opacity: 0.12 }} />
           <div className="stat-label">Total Brokerage</div>
-          <div className="stat-value">{formatINR(stats.totalBrokerage)}</div>
+          <div className="stat-value">{formatCompactINR(stats.totalBrokerage)}</div>
         </div>
       </div>
       {error

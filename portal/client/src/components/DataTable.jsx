@@ -85,6 +85,7 @@ export default function DataTable({ columns, data, loading, emptyMessage = 'No d
             type="text"
             className="search-input"
             placeholder="Search across all columns…"
+            aria-label="Search table"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -101,7 +102,7 @@ export default function DataTable({ columns, data, loading, emptyMessage = 'No d
         </div>
       ) : (
         <>
-          <div className="table-wrapper">
+          <div className="table-wrapper" tabIndex="0" aria-label="Scrollable data table">
             <table>
               <thead>
                 <tr>
@@ -109,14 +110,17 @@ export default function DataTable({ columns, data, loading, emptyMessage = 'No d
                     <th
                       key={col.key}
                       className={sortKey === col.key ? 'sorted' : ''}
-                      onClick={() => handleSort(col.key)}
+                      scope="col"
+                      aria-sort={sortKey === col.key ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
                     >
-                      {col.label}
-                      {sortKey === col.key && (
-                        <span className="sort-icon">
-                          {sortDir === 'asc' ? <ChevronUp size={12} strokeWidth={3} style={{ display: 'inline' }} /> : <ChevronDown size={12} strokeWidth={3} style={{ display: 'inline' }} />}
-                        </span>
-                      )}
+                      <button type="button" className="table-sort-button" onClick={() => handleSort(col.key)}>
+                        {col.label}
+                        {sortKey === col.key && (
+                          <span className="sort-icon" aria-hidden="true">
+                            {sortDir === 'asc' ? <ChevronUp size={12} strokeWidth={3} /> : <ChevronDown size={12} strokeWidth={3} />}
+                          </span>
+                        )}
+                      </button>
                     </th>
                   ))}
                 </tr>

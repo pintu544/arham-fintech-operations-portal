@@ -12,7 +12,7 @@ export default function Overview() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [requestVersion, setRequestVersion] = useState(0)
-  const { dataVersion } = useSocket()
+  const { dataVersion, syncStatus } = useSocket()
   const { currentUser } = useAuth()
 
   useEffect(() => {
@@ -76,6 +76,9 @@ export default function Overview() {
   }
 
   const COLORS = ['#638eff', '#34d399', '#fbbf24', '#a78bfa', '#fb7185']
+  const lastUpdated = syncStatus.lastSuccessfulSync?.completedAt
+    ? new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(syncStatus.lastSuccessfulSync.completedAt))
+    : null
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -122,7 +125,10 @@ export default function Overview() {
   return (
     <div style={{ animation: 'fadeIn 0.4s ease' }}>
       <h1 className="page-title">Dashboard Overview</h1>
-      <p className="page-subtitle">Real-time performance metrics and trading analytics</p>
+      <p className="page-subtitle overview-subtitle">
+        <span>Latest synchronized performance metrics and trading analytics</span>
+        {lastUpdated && <time dateTime={syncStatus.lastSuccessfulSync.completedAt}>Last updated {lastUpdated}</time>}
+      </p>
 
       <div className="stats-grid">
         <div className="stat-card blue">
@@ -147,7 +153,7 @@ export default function Overview() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '24px', marginTop: '24px' }}>
+      <div className="overview-chart-grid">
         
         {/* Trading Volume Chart */}
         <div style={{ 
@@ -161,7 +167,7 @@ export default function Overview() {
           <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '24px' }}>
             Daily Trading Volume (Last 14 Days)
           </h3>
-          <div style={{ width: '100%', height: 300 }}>
+          <div style={{ width: '100%', height: 300 }} role="img" aria-label="Daily trading volume for the last 14 days">
             <ResponsiveContainer>
               <AreaChart data={volumeData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
@@ -215,7 +221,7 @@ export default function Overview() {
           <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '24px' }}>
             Client Account Distribution
           </h3>
-          <div style={{ width: '100%', height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '100%', height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }} role="img" aria-label="Client account type distribution">
             <ResponsiveContainer>
               <PieChart>
                 <Pie
